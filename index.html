@@ -310,10 +310,16 @@ body {
   <!-- SOLAR PRODUCTION -->
   <div class="card">
     <h3>Solar Production (Enphase)</h3>
-    <div id="solar-value">-- W</div>
-    <div id="solar-placeholder">
-      ⚠ Enphase data unavailable — CORS blocks direct browser access to the gateway.
-      Configure a local proxy or Enphase Cloud API in Settings.
+    <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;">
+      <div id="solar-value" style="font-size:28px; font-weight:800; color:#d29922">-- W</div>
+      <div id="solar-today" style="font-size:12px; color:#8b949e"></div>
+    </div>
+    <div style="margin-top:4px; font-size:12px; color:#8b949e;">
+      Self-use: <b id="self-cons-value" style="color:#3fb950">--</b>
+      <span id="self-cons-pct" style="margin-left:6px; opacity:0.6"></span>
+    </div>
+    <div id="solar-placeholder" style="font-size:12px; color:#8b949e; margin-top:6px; padding:8px; background:#0d1117; border-radius:8px; border:1px dashed #30363d;">
+      ⚠ Proxy not reachable — is enphase_proxy.py running in Termux?
     </div>
     <div class="chart-container"><canvas id="chart-solar"></canvas></div>
   </div>
@@ -344,8 +350,8 @@ body {
       <input type="text" id="cfg-enphase-token" placeholder="Bearer token (optional)">
     </div>
     <div class="field">
-      <label>Local Proxy URL (for Enphase CORS workaround)</label>
-      <input type="text" id="cfg-proxy-url" placeholder="e.g. http://localhost:8099">
+      <label>Enphase Proxy URL <span style="color:#3fb950;font-size:10px;">← set this to use Termux proxy</span></label>
+      <input type="text" id="cfg-proxy-url" placeholder="http://localhost:8099">
     </div>
     <div class="field">
       <label>Refresh Interval (seconds)</label>
@@ -372,7 +378,7 @@ function defaultConfig() {
     enphaseIp: 'envoy.local',
     enphaseProtocol: 'https',
     enphaseToken: '',
-    proxyUrl: '',
+    proxyUrl: 'http://localhost:8099',   // default: Termux proxy
     refresh: 3
   };
 }
@@ -670,7 +676,7 @@ async function fetchP1() {
 //  FETCH: Enphase Solar
 // ===============================================================
 async function fetchEnphase() {
-  // Try proxy first, then direct
+  // Build URL — proxy takes priority over direct gateway access
   let url = '';
   if (cfg.proxyUrl) {
     url = cfg.proxyUrl;
@@ -681,26 +687,46 @@ async function fetchEnphase() {
   }
 
   try {
-    const opts = {};
-    if (cfg.enphaseToken) {
+    const opts = { signal: AbortSignal.timeout(4000) };
+    // Only send auth header when talking directly to the gateway, not the proxy
+    if (cfg.enphaseToken && !cfg.proxyUrl) {
       opts.headers = { 'Authorization': 'Bearer ' + cfg.enphaseToken };
     }
     const r = await fetch(url, opts);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
 
-    const wNow = d.wattsNow || 0;
+    const wNow   = d.wattsNow        || 0;
     const whToday = d.wattHoursToday || 0;
 
     state.solar = d;
+    state.solarConnected = true;
+
+    // Update solar card
     el('solar-value').textContent = fmtW(wNow);
+    el('solar-value').style.color = wNow > 0 ? '#d29922' : '#8b949e';
     el('solar-placeholder').style.display = 'none';
+    el('solar-today').textContent = fmt(whToday / 1000) + ' kWh today';
     el('total-solar').textContent = fmt(whToday / 1000);
 
+    // Self-consumption: solar produced minus what went back to grid
+    const gridExportW = state.latest ? Math.max(0, -(state.latest.active_power_w || 0)) : 0;
+    const selfConsW   = Math.max(0, wNow - gridExportW);
+    const selfPct     = wNow > 0 ? Math.round((selfConsW / wNow) * 100) : 0;
+    el('self-cons-value').textContent = fmtW(selfConsW);
+    el('self-cons-pct').textContent = `${selfPct}% self-used`;
+
+    // History for chart
     state.solarHistory.push({ t: Date.now(), v: wNow });
     if (state.solarHistory.length > HISTORY_MAX) state.solarHistory.shift();
 
   } catch(e) {
-    // Silently fail — Enphase CORS issues are expected
+    state.solarConnected = false;
+    // Show placeholder only if proxy was expected but failed
+    if (cfg.proxyUrl) {
+      el('solar-placeholder').style.display = 'block';
+      el('solar-placeholder').textContent = '⚠ Proxy not reachable — is enphase_proxy.py running in Termux?';
+    }
     console.warn('Enphase error:', e.message);
   }
 }
