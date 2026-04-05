@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Dashboard PWA</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1117">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { margin:0; font-family: sans-serif; background:#0d1117; color:#e6edf3; }
+#app { padding:10px; }
+.card { background:#161b22; padding:10px; margin-bottom:10px; border-radius:10px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="card">
+    <h3>Power</h3>
+    <div id="power">--</div>
+  </div>
+  <div class="card">
+    <h3>Price</h3>
+    <div id="price">--</div>
+  </div>
+  <canvas id="chart" height="120"></canvas>
+</div>
+
+<script>
+// ================= CONFIG =================
+const CFG_KEY = 'energyDashboardConfig';
+
+function defaultConfig(){
+  return {
+    p1Ip:'',
+    enphaseIp:'',
+    enphaseProtocol:'http',
+    refresh:3
+  }
+}
+
+let cfg = Object.assign(defaultConfig(), JSON.parse(localStorage.getItem(CFG_KEY)||"{}"));
+
+// ================= STATE =================
+const state = {
+  history:[],
+  solarHistory:[],
+  prices:[],
+  priceMap:{}
+};
+
+const HISTORY_MAX = 720;
+
+// ================= HELPERS =================
+function el(id){return document.getElementById(id)}
+function fmt(n){return (n==null||isNaN(n))?'--':n.toFixed(2)}
+
+// ================= CHART =================
+const chart = new Chart(el('chart'),{
+  type:'line',
+  data:{labels:[],datasets:[{data:[],borderWidth:2}]},
+  options:{animation:false,responsive:true}
+});
+
+function updateChart(){
+  chart.data.labels = state.history.map(p=>new Date(p.t).toLocaleTimeString());
+  chart.data.datasets[0].data = state.history.map(p=>p.v);
+  chart.update('none');
+}
+
+// ================= FETCH P1 =================
+async function fetchP1(){
+  if(!cfg.p1Ip) return;
+  try{
+    const r = await fetch(`http://${cfg.p1Ip}/api/v1/data`);
+    const d = await r.json();
+
+    const w = d.active_power_w || 0;
+    el('power').textContent = fmt(w) + ' W';
+
+    state.history.push({t:Date.now(),v:w});
+    if(state.history.length>HISTORY_MAX) state.history.shift();
+
+  }catch(e){ console.error(e); }
+}
+
+// ================= FETCH ENPHASE =================
+async function fetchEnphase(){
+  if(!cfg.enphaseIp) return;
+  try{
+    const url = `${cfg.enphaseProtocol}://${cfg.enphaseIp}/api/v1/production`;
+    const r = await fetch(url);
+    const d = await r.json();
+
+    const wNow = d.wattsNow || 0;
+
+    state.solarHistory.push({t:Date.now(),v:wNow});
+    if(state.solarHistory.length>HISTORY_MAX) state.solarHistory.shift();
+
+  }catch(e){ console.warn('Enphase error', e); }
+}
+
+// ================= FETCH PRICES =================
+async function fetchPrices(){
+  try{
+    const r = await fetch('https://api.energyzero.nl/v1/energyprices?interval=4&usageType=1&inclBtw=true');
+    const d = await r.json();
+
+    state.prices = (d.Prices||[]).map(p=>({
+      hour:new Date(p.readingDate).getHours(),
+      price:p.price
+    }));
+
+    state.priceMap = Object.fromEntries(state.prices.map(p=>[p.hour,p]));
+
+    updatePrice();
+
+  }catch(e){console.error(e)}
+}
+
+function updatePrice(){
+  const h = new Date().getHours();
+  const p = state.priceMap[h];
+  if(p) el('price').textContent = '€'+fmt(p.price);
+}
+
+// ================= LOOP =================
+let lastChartUpdate = 0;
+
+function shouldUpdateChart(){
+  const now = Date.now();
+  if(now-lastChartUpdate>5000){
+    lastChartUpdate = now;
+    return true;
+  }
+  return false;
+}
+
+async function loop(){
+  await fetchP1();
+  await fetchEnphase();
+  if(shouldUpdateChart()) updateChart();
+}
+
+setInterval(loop, cfg.refresh*1000);
+fetchPrices();
+setInterval(fetchPrices, 30*60*1000);
+
+// ================= WAKE LOCK =================
+let wakeLock = null;
+async function acquireWakeLock(){
+  try{
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', ()=>{
+      setTimeout(acquireWakeLock,1000);
+    });
+  }catch(e){}
+}
+
+if('wakeLock' in navigator){
+  acquireWakeLock();
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible') acquireWakeLock();
+  });
+}
+
+// ================= SERVICE WORKER =================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+
+</script>
+</body>
+</html>
+
+<!-- ================= FILE: manifest.json ================= -->
+<!-- Save separately -->
+{
+  "name": "Energy Dashboard",
+  "short_name": "Energy",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": []
+}
+
+<!-- ================= FILE: sw.js ================= -->
+<!-- Save separately -->
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open('energy-dashboard').then(cache => cache.addAll(['./']))
+  );
+});
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(res => res || fetch(e.request))
+  );
+});
+
