@@ -10,7 +10,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-/* ================= RESET & BASE ================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow-x: hidden; }
 body {
@@ -18,141 +17,80 @@ body {
   background: #0d1117; color: #e6edf3; font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ================= LAYOUT ================= */
 #app {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 8px;
-  max-width: 1280px;
-  margin: 0 auto;
+  gap: 8px; padding: 8px;
+  max-width: 1280px; margin: 0 auto;
 }
 .card {
-  background: #161b22;
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid #30363d;
-  position: relative;
-  overflow: hidden;
+  background: #161b22; border-radius: 12px;
+  padding: 12px 14px; border: 1px solid #30363d;
+  position: relative; overflow: hidden;
 }
 .card-full { grid-column: 1 / -1; }
 .card h3 {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #8b949e;
-  margin-bottom: 6px;
-  font-weight: 600;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.8px; color: #8b949e;
+  margin-bottom: 6px; font-weight: 600;
 }
-
-/* ================= HEADER BAR ================= */
 #header {
   grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: flex; justify-content: space-between; align-items: center;
   padding: 4px 0;
 }
 #header h1 { font-size: 16px; font-weight: 700; }
 #header-right { display: flex; align-items: center; gap: 10px; }
-#status-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #f85149; transition: background 0.3s;
-}
+#status-dot { width: 8px; height: 8px; border-radius: 50%; background: #f85149; transition: background 0.3s; }
 #status-dot.ok { background: #3fb950; }
 #clock { font-size: 13px; color: #8b949e; font-variant-numeric: tabular-nums; }
-#settings-btn {
-  background: none; border: 1px solid #30363d; color: #8b949e;
-  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px;
-}
+#settings-btn { background: none; border: 1px solid #30363d; color: #8b949e; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px; }
 #settings-btn:hover { background: #21262d; color: #e6edf3; }
 
-/* ================= POWER CARD ================= */
-#power-value {
-  font-size: 42px; font-weight: 800; line-height: 1;
-  font-variant-numeric: tabular-nums;
-  transition: color 0.3s;
-}
+#power-value { font-size: 42px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; transition: color 0.3s; }
 #power-value.importing { color: #f47067; }
 #power-value.exporting { color: #3fb950; }
 #power-direction { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; opacity: 0.6; }
 .phase-row { display: flex; gap: 12px; margin-top: 8px; font-size: 12px; color: #8b949e; font-variant-numeric: tabular-nums; }
 .phase-row span { display: inline-flex; align-items: center; gap: 3px; }
 .phase-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-.phase-dot.l1 { background: #f0883e; }
-.phase-dot.l2 { background: #a371f7; }
-.phase-dot.l3 { background: #79c0ff; }
+.phase-dot.l1 { background: #f0883e; } .phase-dot.l2 { background: #a371f7; } .phase-dot.l3 { background: #79c0ff; }
 
-/* ================= PRICE CARD ================= */
 #price-value { font-size: 36px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-.price-badge {
-  display: inline-block; font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  padding: 2px 8px; border-radius: 10px; margin-left: 8px; vertical-align: middle;
-}
-.price-cheap    { background: #238636; color: #fff; }
+.price-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
+.price-cheap { background: #238636; color: #fff; }
 .price-moderate { background: #9e6a03; color: #fff; }
-.price-expensive{ background: #da3633; color: #fff; }
-#price-summary  { font-size: 11px; color: #8b949e; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.price-expensive { background: #da3633; color: #fff; }
+#price-summary { font-size: 11px; color: #8b949e; margin-top: 6px; font-variant-numeric: tabular-nums; }
 
-/* ================= TOTALS ================= */
 .totals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .total-item { background: #0d1117; border-radius: 8px; padding: 8px 10px; }
 .total-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: #8b949e; margin-bottom: 2px; }
 .total-value { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .total-value .unit { font-size: 12px; font-weight: 400; opacity: 0.6; }
 .delta-badge { font-size: 10px; font-weight: 600; padding: 1px 5px; border-radius: 8px; margin-left: 4px; vertical-align: middle; }
-.delta-up   { background: rgba(248,81,73,0.15);  color: #f47067; }
-.delta-down { background: rgba(63,185,80,0.15);  color: #3fb950; }
+.delta-up { background: rgba(248,81,73,0.15); color: #f47067; }
+.delta-down { background: rgba(63,185,80,0.15); color: #3fb950; }
 .delta-neutral { background: rgba(139,148,158,0.15); color: #8b949e; }
 
-/* ================= CHARTS ================= */
 .chart-container { position: relative; height: 140px; margin-top: 4px; }
 .chart-container canvas { width: 100% !important; }
 
-/* ================= SOLAR CARD ================= */
-#solar-placeholder {
-  font-size: 12px; color: #8b949e; margin-top: 6px;
-  padding: 8px; background: #0d1117; border-radius: 8px;
-  border: 1px dashed #30363d;
-}
-
-/* ================= SETTINGS MODAL ================= */
-#modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7); z-index: 100;
-  justify-content: center; align-items: center;
-}
+#modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center; }
 #modal-overlay.open { display: flex; }
-#modal {
-  background: #161b22; border: 1px solid #30363d;
-  border-radius: 14px; padding: 20px;
-  width: 90%; max-width: 440px; max-height: 90vh; overflow-y: auto;
-}
+#modal { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 20px; width: 90%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
 #modal h2 { font-size: 16px; margin-bottom: 14px; }
 .field { margin-bottom: 12px; }
 .field label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: #8b949e; margin-bottom: 4px; }
-.field input, .field select {
-  width: 100%; padding: 8px 10px;
-  background: #0d1117; border: 1px solid #30363d;
-  border-radius: 8px; color: #e6edf3; font-size: 13px;
-}
+.field input, .field select { width: 100%; padding: 8px 10px; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; color: #e6edf3; font-size: 13px; }
 .field input:focus, .field select:focus { outline: none; border-color: #58a6ff; }
 .field .hint { font-size: 10px; color: #8b949e; margin-top: 3px; }
 .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 .modal-actions button { flex: 1; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
-#btn-save   { background: #238636; color: #fff; }
-#btn-save:hover { background: #2ea043; }
-#btn-cancel { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
-#btn-cancel:hover { background: #30363d; }
-.section-label {
-  font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px;
-  color: #58a6ff; margin: 14px 0 8px; padding-bottom: 4px;
-  border-bottom: 1px solid #21262d;
-}
+#btn-save { background: #238636; color: #fff; } #btn-save:hover { background: #2ea043; }
+#btn-cancel { background: #21262d; color: #e6edf3; border: 1px solid #30363d; } #btn-cancel:hover { background: #30363d; }
+.section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: #58a6ff; margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #21262d; }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 600px) {
   #app { grid-template-columns: 1fr; }
   #power-value { font-size: 36px; }
@@ -163,17 +101,15 @@ body {
 <body>
 <div id="app">
 
-  <!-- HEADER -->
   <div id="header">
     <h1>Energy Dashboard</h1>
     <div id="header-right">
       <span id="clock">--:--</span>
-      <span id="status-dot" title="P1 connection status"></span>
+      <span id="status-dot"></span>
       <button id="settings-btn" onclick="openSettings()">⚙ Settings</button>
     </div>
   </div>
 
-  <!-- CURRENT POWER -->
   <div class="card">
     <h3>Current Power</h3>
     <div id="power-value" class="importing">-- W</div>
@@ -185,7 +121,6 @@ body {
     </div>
   </div>
 
-  <!-- ENERGY PRICE -->
   <div class="card">
     <h3>Electricity Price</h3>
     <div>
@@ -195,7 +130,6 @@ body {
     <div id="price-summary">Loading prices…</div>
   </div>
 
-  <!-- TODAY'S TOTALS -->
   <div class="card card-full">
     <h3>Today's Totals</h3>
     <div class="totals-grid">
@@ -226,31 +160,26 @@ body {
     </div>
   </div>
 
-  <!-- POWER HISTORY CHART -->
   <div class="card card-full">
     <h3>Power History (60 min)</h3>
     <div class="chart-container"><canvas id="chart-power"></canvas></div>
   </div>
 
-  <!-- HOURLY PRICES CHART -->
   <div class="card">
     <h3>Hourly Prices Today</h3>
     <div class="chart-container"><canvas id="chart-prices"></canvas></div>
   </div>
 
-  <!-- CONSUMPTION VS EXPORT CHART -->
   <div class="card">
     <h3>Consumption vs Export</h3>
     <div class="chart-container"><canvas id="chart-consexp"></canvas></div>
   </div>
 
-  <!-- GAS USAGE CHART -->
   <div class="card">
     <h3>Gas Usage (24h)</h3>
     <div class="chart-container"><canvas id="chart-gas"></canvas></div>
   </div>
 
-  <!-- SOLAR PRODUCTION -->
   <div class="card">
     <h3>Solar Production (Enphase)</h3>
     <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;">
@@ -269,46 +198,41 @@ body {
 
 </div>
 
-<!-- SETTINGS MODAL -->
 <div id="modal-overlay">
   <div id="modal">
     <h2>⚙ Dashboard Settings</h2>
-
     <div class="section-label">Local Proxy (Termux)</div>
     <div class="field">
       <label>Proxy URL</label>
       <input type="text" id="cfg-proxy-url" placeholder="http://localhost:8099">
-      <div class="hint">Run enphase_proxy.py in Termux. Handles both P1 and Enphase.</div>
+      <div class="hint">Handles both P1 and Enphase via enphase_proxy.py in Termux.</div>
     </div>
-
-    <div class="section-label">Direct Access (fallback)</div>
+    <div class="section-label">Direct Fallback (no proxy)</div>
     <div class="field">
-      <label>HomeWizard P1 IP Address</label>
-      <input type="text" id="cfg-p1ip" placeholder="e.g. 192.168.2.2">
-      <div class="hint">Only used when proxy is not set. May be blocked by HTTPS mixed-content policy.</div>
+      <label>HomeWizard P1 IP</label>
+      <input type="text" id="cfg-p1ip" placeholder="192.168.2.2">
+      <div class="hint">Only used when proxy is not set. May be blocked on HTTPS pages.</div>
     </div>
     <div class="field">
-      <label>Enphase Gateway IP / Hostname</label>
-      <input type="text" id="cfg-enphase-ip" placeholder="e.g. envoy.local or 192.168.2.x">
+      <label>Enphase Gateway IP</label>
+      <input type="text" id="cfg-enphase-ip" placeholder="e.g. 192.168.2.x">
     </div>
     <div class="field">
       <label>Enphase Protocol</label>
       <select id="cfg-enphase-proto">
-        <option value="https">HTTPS (default)</option>
+        <option value="https">HTTPS</option>
         <option value="http">HTTP</option>
       </select>
     </div>
     <div class="field">
       <label>Enphase JWT Token</label>
-      <input type="text" id="cfg-enphase-token" placeholder="Bearer token from entrez.enphaseenergy.com">
+      <input type="text" id="cfg-enphase-token" placeholder="Bearer token (only needed without proxy)">
     </div>
-
     <div class="section-label">General</div>
     <div class="field">
       <label>Refresh Interval (seconds)</label>
       <input type="number" id="cfg-refresh" min="1" max="60" placeholder="3">
     </div>
-
     <div class="modal-actions">
       <button id="btn-cancel" onclick="closeSettings()">Cancel</button>
       <button id="btn-save" onclick="saveSettings()">Save</button>
@@ -317,407 +241,381 @@ body {
 </div>
 
 <script>
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  CONFIG
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 const CFG_KEY       = 'energyDashboardConfig';
 const YESTERDAY_KEY = 'energyDashboardYesterday';
 const HISTORY_KEY   = 'energyDashboardHistory';
 
+// How many power-history points to keep (1 per refresh, 60 min worth at 3s = 1200)
+const HISTORY_MAX   = 1200;
+// Only show history points from the last 60 minutes in the chart
+const HISTORY_WINDOW_MS = 60 * 60 * 1000;
+
 function defaultConfig() {
-  return {
-    p1Ip:            '192.168.2.2',
-    enphaseIp:       'envoy.local',
-    enphaseProtocol: 'https',
-    enphaseToken:    '',
-    proxyUrl:        'http://localhost:8099',
-    refresh:         3
-  };
+  return { p1Ip:'192.168.2.2', enphaseIp:'envoy.local', enphaseProtocol:'https', enphaseToken:'', proxyUrl:'http://localhost:8099', refresh:3 };
 }
+let cfg = Object.assign(defaultConfig(), JSON.parse(localStorage.getItem(CFG_KEY)||'{}'));
 
-let cfg = Object.assign(defaultConfig(), JSON.parse(localStorage.getItem(CFG_KEY) || '{}'));
-
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  STATE
-// ===============================================================
-const HISTORY_MAX = 720;
-
+// ═══════════════════════════════════════════════════════════
 const state = {
-  powerHistory:  [],
-  solarHistory:  [],
-  hourlyImport:  new Array(24).fill(0),
-  hourlyExport:  new Array(24).fill(0),
-  hourlyGas:     new Array(24).fill(null),
-  prices:        [],
-  priceMap:      {},
-  baseline:      null,
-  latest:        null,
-  solar:         null,
-  yesterday:     JSON.parse(localStorage.getItem(YESTERDAY_KEY) || 'null'),
-  currentDay:    new Date().getDate(),
-  costAccum:     0,
-  lastCostUpdate:null,
-  connected:     false,
-  solarConnected:false
+  powerHistory:[], solarHistory:[],
+  hourlyImport: new Array(24).fill(0),
+  hourlyExport: new Array(24).fill(0),
+  hourlyGas:    new Array(24).fill(null),
+  prices:[], priceMap:{},
+  baseline:null, latest:null, solar:null,
+  yesterday: JSON.parse(localStorage.getItem(YESTERDAY_KEY)||'null'),
+  currentDay: new Date().getDate(),
+  costAccum:0, lastCostUpdate:null,
+  connected:false, solarConnected:false
 };
 
-// Restore persisted history (same day only)
-try {
-  const saved = JSON.parse(localStorage.getItem(HISTORY_KEY) || 'null');
-  if (saved && saved.day === new Date().getDate()) {
-    state.powerHistory  = saved.powerHistory  || [];
-    state.solarHistory  = saved.solarHistory  || [];
+// ── Restore from localStorage ─────────────────────────────
+// Issue C fix: restore history on every page load (survives tab reload after sleep)
+(function restoreHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(HISTORY_KEY)||'null');
+    if (!saved || saved.day !== new Date().getDate()) return;
+
+    // Trim power/solar history to the last 60 min so stale data isn't shown
+    const cutoff = Date.now() - HISTORY_WINDOW_MS;
+    state.powerHistory  = (saved.powerHistory  || []).filter(p => p.t > cutoff);
+    state.solarHistory  = (saved.solarHistory  || []).filter(p => p.t > cutoff);
     state.hourlyImport  = saved.hourlyImport  || new Array(24).fill(0);
     state.hourlyExport  = saved.hourlyExport  || new Array(24).fill(0);
     state.hourlyGas     = saved.hourlyGas     || new Array(24).fill(null);
     state.costAccum     = saved.costAccum     || 0;
-    state.baseline      = saved.baseline      || null;
-  }
-} catch(e) {}
+    state.baseline      = saved.baseline      || null;   // ← key for correct today totals
+  } catch(e) {}
+})();
 
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  HELPERS
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 const el = id => document.getElementById(id);
-function fmt(n, d=2)  { return (n == null || isNaN(n)) ? '--' : Number(n).toFixed(d); }
+const fmt = (n, d=2) => (n==null||isNaN(n)) ? '--' : Number(n).toFixed(d);
 function fmtW(w) {
-  if (w == null || isNaN(w)) return '-- W';
-  return Math.abs(w) >= 1000 ? (w/1000).toFixed(2) + ' kW' : Math.round(w) + ' W';
+  if (w==null||isNaN(w)) return '-- W';
+  return Math.abs(w)>=1000 ? (w/1000).toFixed(2)+' kW' : Math.round(w)+' W';
 }
 
-// ===============================================================
-//  CLOCK + DAY ROLLOVER
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
+//  CLOCK + MIDNIGHT ROLLOVER
+// ═══════════════════════════════════════════════════════════
 function updateClock() {
   const now = new Date();
-  el('clock').textContent = now.toLocaleTimeString('nl-NL', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  el('clock').textContent = now.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   if (now.getDate() !== state.currentDay) {
     saveYesterday();
     state.currentDay = now.getDate();
-    state.baseline   = null;
-    state.hourlyImport.fill(0);
-    state.hourlyExport.fill(0);
-    state.hourlyGas.fill(null);
-    state.costAccum  = 0;
-    state.powerHistory = [];
-    state.solarHistory = [];
+    state.baseline = null;
+    state.hourlyImport.fill(0); state.hourlyExport.fill(0); state.hourlyGas.fill(null);
+    state.costAccum = 0; state.powerHistory = []; state.solarHistory = [];
+    persistHistory();
   }
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  YESTERDAY COMPARISON
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 function saveYesterday() {
-  if (!state.latest || !state.baseline) return;
-  const data = { import: todayImport(), export: todayExport(), gas: todayGas(), date: new Date().toISOString() };
-  localStorage.setItem(YESTERDAY_KEY, JSON.stringify(data));
-  state.yesterday = data;
+  if (!state.latest||!state.baseline) return;
+  const d = {import:todayImport(), export:todayExport(), gas:todayGas(), date:new Date().toISOString()};
+  localStorage.setItem(YESTERDAY_KEY, JSON.stringify(d));
+  state.yesterday = d;
 }
 function todayImport() {
-  if (!state.latest || !state.baseline) return 0;
+  if (!state.latest||!state.baseline) return 0;
   return (state.latest.total_power_import_t1_kwh + state.latest.total_power_import_t2_kwh)
        - (state.baseline.total_power_import_t1_kwh + state.baseline.total_power_import_t2_kwh);
 }
 function todayExport() {
-  if (!state.latest || !state.baseline) return 0;
+  if (!state.latest||!state.baseline) return 0;
   return (state.latest.total_power_export_t1_kwh + state.latest.total_power_export_t2_kwh)
        - (state.baseline.total_power_export_t1_kwh + state.baseline.total_power_export_t2_kwh);
 }
 function todayGas() {
-  if (!state.latest || !state.baseline) return 0;
-  return (state.latest.total_gas_m3 || 0) - (state.baseline.total_gas_m3 || 0);
+  if (!state.latest||!state.baseline) return 0;
+  return (state.latest.total_gas_m3||0) - (state.baseline.total_gas_m3||0);
 }
-function renderDelta(elId, todayVal, yesterdayVal) {
-  const badge = el(elId);
-  if (!badge || !yesterdayVal) { if(badge) badge.innerHTML=''; return; }
-  const pct = ((todayVal - yesterdayVal) / Math.abs(yesterdayVal)) * 100;
-  const sign = pct >= 0 ? '+' : '';
-  const cls  = pct > 5 ? 'delta-up' : pct < -5 ? 'delta-down' : 'delta-neutral';
-  badge.innerHTML = `<span class="delta-badge ${cls}">${sign}${pct.toFixed(0)}%</span>`;
+function renderDelta(elId, today, yesterday) {
+  const b = el(elId);
+  if (!b||!yesterday) { if(b) b.innerHTML=''; return; }
+  const pct = ((today-yesterday)/Math.abs(yesterday))*100;
+  const cls = pct>5?'delta-up':pct<-5?'delta-down':'delta-neutral';
+  b.innerHTML = `<span class="delta-badge ${cls}">${pct>=0?'+':''}${pct.toFixed(0)}%</span>`;
 }
 
-// ===============================================================
-//  CHART DEFAULTS
-// ===============================================================
-const chartDefaults = {
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: { enabled: true, mode: 'index', intersect: false }
-  },
-  scales: {
-    x: { ticks: { color: '#484f58', font: {size:9} }, grid: { color: '#21262d' } },
-    y: { ticks: { color: '#484f58', font: {size:9} }, grid: { color: '#21262d' } }
+// ═══════════════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════════════
+const CD = {
+  responsive:true, maintainAspectRatio:false, animation:false,
+  plugins:{ legend:{display:false}, tooltip:{enabled:true,mode:'index',intersect:false} },
+  scales:{
+    x:{ticks:{color:'#484f58',font:{size:9}},grid:{color:'#21262d'}},
+    y:{ticks:{color:'#484f58',font:{size:9}},grid:{color:'#21262d'}}
   }
 };
 
-const powerChart = new Chart(el('chart-power'), {
-  type: 'line',
-  data: { labels: [], datasets: [
-    { label:'Import', data:[], borderColor:'#f47067', backgroundColor:'rgba(244,112,103,0.1)', borderWidth:1.5, pointRadius:0, fill:true, tension:0.3 },
-    { label:'Export', data:[], borderColor:'#3fb950', backgroundColor:'rgba(63,185,80,0.1)',  borderWidth:1.5, pointRadius:0, fill:true, tension:0.3 }
+const powerChart = new Chart(el('chart-power'),{
+  type:'line',
+  data:{labels:[],datasets:[
+    {label:'Import',data:[],borderColor:'#f47067',backgroundColor:'rgba(244,112,103,0.1)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.3},
+    {label:'Export',data:[],borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,0.1)', borderWidth:1.5,pointRadius:0,fill:true,tension:0.3}
   ]},
-  options: { ...chartDefaults }
+  options:{...CD}
 });
 
-const priceChart = new Chart(el('chart-prices'), {
-  type: 'bar',
-  data: { labels:[], datasets:[{ data:[], backgroundColor:[], borderRadius:3 }] },
-  options: { ...chartDefaults }
+const priceChart = new Chart(el('chart-prices'),{
+  type:'bar',
+  data:{labels:[],datasets:[{data:[],backgroundColor:[],borderRadius:3}]},
+  options:{...CD}
 });
 
-const consExpChart = new Chart(el('chart-consexp'), {
-  type: 'bar',
-  data: {
-    labels: Array.from({length:24}, (_,i)=>`${i}:00`),
-    datasets: [
-      { label:'Import', data:new Array(24).fill(0), backgroundColor:'rgba(244,112,103,0.7)', borderRadius:2 },
-      { label:'Export', data:new Array(24).fill(0), backgroundColor:'rgba(63,185,80,0.7)',  borderRadius:2 }
+const consExpChart = new Chart(el('chart-consexp'),{
+  type:'bar',
+  data:{
+    labels:Array.from({length:24},(_,i)=>`${i}:00`),
+    datasets:[
+      {label:'Import',data:new Array(24).fill(0),backgroundColor:'rgba(244,112,103,0.7)',borderRadius:2},
+      {label:'Export',data:new Array(24).fill(0),backgroundColor:'rgba(63,185,80,0.7)', borderRadius:2}
     ]
   },
-  options: { ...chartDefaults,
-    plugins: { ...chartDefaults.plugins, legend: { display:true, labels:{ color:'#8b949e', font:{size:9} } } },
-    scales: { ...chartDefaults.scales,
-      x: { ...chartDefaults.scales.x, stacked:true },
-      y: { ...chartDefaults.scales.y, stacked:true }
-    }
+  options:{...CD,
+    plugins:{...CD.plugins,legend:{display:true,labels:{color:'#8b949e',font:{size:9}}}},
+    scales:{...CD.scales,x:{...CD.scales.x,stacked:true},y:{...CD.scales.y,stacked:true}}
   }
 });
 
-const gasChart = new Chart(el('chart-gas'), {
-  type: 'line',
-  data: {
-    labels: Array.from({length:24}, (_,i)=>`${i}:00`),
-    datasets: [{ data:new Array(24).fill(null), borderColor:'#d29922', backgroundColor:'rgba(210,153,34,0.1)', borderWidth:1.5, pointRadius:2, fill:true, stepped:'before' }]
-  },
-  options: { ...chartDefaults }
+const gasChart = new Chart(el('chart-gas'),{
+  type:'line',
+  data:{labels:Array.from({length:24},(_,i)=>`${i}:00`),
+    datasets:[{data:new Array(24).fill(null),borderColor:'#d29922',backgroundColor:'rgba(210,153,34,0.1)',borderWidth:1.5,pointRadius:2,fill:true,stepped:'before'}]},
+  options:{...CD}
 });
 
-const solarChart = new Chart(el('chart-solar'), {
-  type: 'line',
-  data: { labels:[], datasets:[{ data:[], borderColor:'#d29922', backgroundColor:'rgba(210,153,34,0.15)', borderWidth:1.5, pointRadius:0, fill:true, tension:0.3 }] },
-  options: { ...chartDefaults }
+const solarChart = new Chart(el('chart-solar'),{
+  type:'line',
+  data:{labels:[],datasets:[{data:[],borderColor:'#d29922',backgroundColor:'rgba(210,153,34,0.15)',borderWidth:1.5,pointRadius:0,fill:true,tension:0.3}]},
+  options:{...CD}
 });
 
-// ===============================================================
+// Render any history that was restored from localStorage
+function renderRestoredCharts() {
+  updateCharts();
+  if (state.hourlyImport.some(v=>v>0)||state.hourlyExport.some(v=>v>0)) {
+    consExpChart.data.datasets[0].data = [...state.hourlyImport];
+    consExpChart.data.datasets[1].data = [...state.hourlyExport];
+    consExpChart.update('none');
+  }
+  if (state.hourlyGas.some(v=>v!=null)) {
+    gasChart.data.datasets[0].data = [...state.hourlyGas];
+    gasChart.update('none');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  FETCH: P1 METER
-//  When a proxy is configured, fetch via /p1 on the proxy.
-//  Fallback: direct HTTP (only works on HTTP pages or with mixed-content allowed).
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 async function fetchP1() {
-  let url;
-  if (cfg.proxyUrl) {
-    url = cfg.proxyUrl.replace(/\/$/, '') + '/p1';
-  } else if (cfg.p1Ip) {
-    url = `http://${cfg.p1Ip}/api/v1/data`;
-  } else {
-    return;
-  }
+  const url = cfg.proxyUrl
+    ? cfg.proxyUrl.replace(/\/$/,'')+'/p1'
+    : cfg.p1Ip ? `http://${cfg.p1Ip}/api/v1/data` : null;
+  if (!url) return;
 
   try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    const r = await fetch(url, {signal:AbortSignal.timeout(4000)});
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
 
-    state.latest   = d;
+    state.latest = d;
     state.connected = true;
     el('status-dot').classList.add('ok');
 
-    if (!state.baseline) state.baseline = { ...d };
+    if (!state.baseline) state.baseline = {...d};
 
-    const w        = d.active_power_w || 0;
-    const importing = w >= 0;
+    const w = d.active_power_w||0;
+    const importing = w>=0;
     el('power-value').textContent = fmtW(w);
-    el('power-value').className   = importing ? 'importing' : 'exporting';
-    el('power-direction').textContent = importing ? '← importing from grid' : '→ exporting to grid';
+    el('power-value').className   = importing?'importing':'exporting';
+    el('power-direction').textContent = importing?'← importing from grid':'→ exporting to grid';
+    el('phase-l1').textContent = fmt(d.active_power_l1_w||0,0)+' W';
+    el('phase-l2').textContent = fmt(d.active_power_l2_w||0,0)+' W';
+    el('phase-l3').textContent = fmt(d.active_power_l3_w||0,0)+' W';
 
-    el('phase-l1').textContent = fmt(d.active_power_l1_w || 0, 0) + ' W';
-    el('phase-l2').textContent = fmt(d.active_power_l2_w || 0, 0) + ' W';
-    el('phase-l3').textContent = fmt(d.active_power_l3_w || 0, 0) + ' W';
+    state.powerHistory.push({t:Date.now(),v:w});
+    if (state.powerHistory.length>HISTORY_MAX) state.powerHistory.shift();
 
-    state.powerHistory.push({ t: Date.now(), v: w });
-    if (state.powerHistory.length > HISTORY_MAX) state.powerHistory.shift();
-
-    const hour = new Date().getHours();
-    const sec  = cfg.refresh || 3;
-    if (w > 0) state.hourlyImport[hour] += (w * sec) / 3600;
-    if (w < 0) state.hourlyExport[hour] += (Math.abs(w) * sec) / 3600;
-    if (d.total_gas_m3 != null && state.baseline)
+    const hour = new Date().getHours(), sec = cfg.refresh||3;
+    if (w>0) state.hourlyImport[hour] += (w*sec)/3600;
+    if (w<0) state.hourlyExport[hour] += (Math.abs(w)*sec)/3600;
+    if (d.total_gas_m3!=null&&state.baseline)
       state.hourlyGas[hour] = d.total_gas_m3 - state.baseline.total_gas_m3;
 
-    const imp = todayImport(), exp = todayExport(), gas = todayGas();
+    const imp=todayImport(), exp=todayExport(), gas=todayGas();
     el('total-import').textContent = fmt(imp);
     el('total-export').textContent = fmt(exp);
-    el('total-gas').textContent    = fmt(gas, 3);
-    el('total-net').textContent    = fmt(imp - exp);
+    el('total-gas').textContent    = fmt(gas,3);
+    el('total-net').textContent    = fmt(imp-exp);
 
     const now = Date.now();
-    if (state.lastCostUpdate && w > 0) {
-      const hrs   = (now - state.lastCostUpdate) / 3600000;
-      const price = getCurrentPrice();
-      if (price != null) state.costAccum += (w / 1000) * hrs * price;
+    if (state.lastCostUpdate&&w>0) {
+      const hrs=(now-state.lastCostUpdate)/3600000, price=getCurrentPrice();
+      if (price!=null) state.costAccum += (w/1000)*hrs*price;
     }
     state.lastCostUpdate = now;
     el('total-cost').textContent = fmt(state.costAccum);
 
     if (state.yesterday) {
-      renderDelta('delta-import', imp, state.yesterday.import);
-      renderDelta('delta-export', exp, state.yesterday.export);
-      renderDelta('delta-gas',   gas, state.yesterday.gas);
+      renderDelta('delta-import',imp,state.yesterday.import);
+      renderDelta('delta-export',exp,state.yesterday.export);
+      renderDelta('delta-gas',  gas,state.yesterday.gas);
     }
 
+    // Issue C fix: persist on every successful P1 fetch
+    persistHistory();
+
   } catch(e) {
-    state.connected = false;
+    state.connected=false;
     el('status-dot').classList.remove('ok');
-    console.warn('P1 error:', e.message);
+    console.warn('P1:',e.message);
   }
 }
 
-// ===============================================================
-//  FETCH: ENPHASE SOLAR
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
+//  FETCH: ENPHASE
+// ═══════════════════════════════════════════════════════════
 async function fetchEnphase() {
-  let url;
-  if (cfg.proxyUrl) {
-    url = cfg.proxyUrl.replace(/\/$/, '');   // root path = Enphase
-  } else if (cfg.enphaseIp) {
-    url = `${cfg.enphaseProtocol}://${cfg.enphaseIp}/api/v1/production`;
-  } else {
-    return;
-  }
+  const url = cfg.proxyUrl
+    ? cfg.proxyUrl.replace(/\/$/,'')
+    : cfg.enphaseIp ? `${cfg.enphaseProtocol}://${cfg.enphaseIp}/api/v1/production` : null;
+  if (!url) return;
 
   try {
-    const opts = { signal: AbortSignal.timeout(4000) };
-    if (cfg.enphaseToken && !cfg.proxyUrl)
-      opts.headers = { 'Authorization': 'Bearer ' + cfg.enphaseToken };
+    const opts = {signal:AbortSignal.timeout(4000)};
+    if (cfg.enphaseToken&&!cfg.proxyUrl)
+      opts.headers = {'Authorization':'Bearer '+cfg.enphaseToken};
 
     const r = await fetch(url, opts);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
 
-    const wNow    = d.wattsNow        || 0;
-    const whToday = d.wattHoursToday  || 0;
-
-    state.solar         = d;
+    const wNow=d.wattsNow||0, whToday=d.wattHoursToday||0;
+    state.solar = d;
     state.solarConnected = true;
 
-    el('solar-value').textContent   = fmtW(wNow);
-    el('solar-value').style.color   = wNow > 0 ? '#d29922' : '#8b949e';
-    el('solar-placeholder').style.display = 'none';
-    el('solar-today').textContent   = fmt(whToday / 1000) + ' kWh today';
-    el('total-solar').textContent   = fmt(whToday / 1000);
+    el('solar-value').textContent  = fmtW(wNow);
+    el('solar-value').style.color  = wNow>0?'#d29922':'#8b949e';
+    el('solar-placeholder').style.display='none';
+    el('solar-today').textContent  = fmt(whToday/1000)+' kWh today';
+    el('total-solar').textContent  = fmt(whToday/1000);
 
-    const gridExportW = state.latest ? Math.max(0, -(state.latest.active_power_w || 0)) : 0;
-    const selfConsW   = Math.max(0, wNow - gridExportW);
-    const selfPct     = wNow > 0 ? Math.round((selfConsW / wNow) * 100) : 0;
-    el('self-cons-value').textContent = fmtW(selfConsW);
-    el('self-cons-pct').textContent   = `${selfPct}% self-used`;
+    const gridExportW = state.latest?Math.max(0,-(state.latest.active_power_w||0)):0;
+    const selfW = Math.max(0,wNow-gridExportW);
+    el('self-cons-value').textContent = fmtW(selfW);
+    el('self-cons-pct').textContent   = wNow>0?`${Math.round(selfW/wNow*100)}% self-used`:'';
 
-    state.solarHistory.push({ t: Date.now(), v: wNow });
-    if (state.solarHistory.length > HISTORY_MAX) state.solarHistory.shift();
+    state.solarHistory.push({t:Date.now(),v:wNow});
+    if (state.solarHistory.length>HISTORY_MAX) state.solarHistory.shift();
 
   } catch(e) {
-    state.solarConnected = false;
-    el('solar-placeholder').style.display = 'block';
-    el('solar-placeholder').textContent   =
-      cfg.proxyUrl
-        ? '⚠ Proxy not reachable — is enphase_proxy.py running in Termux?'
-        : '⚠ Enphase data unavailable — CORS blocks direct browser access.';
-    console.warn('Enphase error:', e.message);
+    state.solarConnected=false;
+    el('solar-placeholder').style.display='block';
+    el('solar-placeholder').textContent = cfg.proxyUrl
+      ? '⚠ Proxy not reachable — is enphase_proxy.py running in Termux?'
+      : '⚠ Enphase unavailable — CORS blocks direct browser access.';
+    console.warn('Enphase:',e.message);
   }
 }
 
-// ===============================================================
-//  FETCH: ENERGY PRICES
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
+//  FETCH: PRICES
+// ═══════════════════════════════════════════════════════════
 async function fetchPrices() {
   try {
-    const now  = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-    const till = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
-    const url  = `https://api.energyzero.nl/v1/energyprices?fromDate=${from}&tillDate=${till}&interval=4&usageType=1&inclBtw=true`;
-    const r    = await fetch(url);
-    const d    = await r.json();
-
-    state.prices  = (d.Prices || []).map(p => ({ hour: new Date(p.readingDate).getHours(), price: p.price }));
-    state.priceMap = {};
-    state.prices.forEach(p => state.priceMap[p.hour] = p.price);
-
-    updatePriceDisplay();
-    updatePriceChart();
-  } catch(e) { console.error('Price error:', e); }
+    const now=new Date();
+    const from=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString();
+    const till=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1).toISOString();
+    const r = await fetch(`https://api.energyzero.nl/v1/energyprices?fromDate=${from}&tillDate=${till}&interval=4&usageType=1&inclBtw=true`);
+    const d = await r.json();
+    state.prices = (d.Prices||[]).map(p=>({hour:new Date(p.readingDate).getHours(),price:p.price}));
+    state.priceMap={};
+    state.prices.forEach(p=>state.priceMap[p.hour]=p.price);
+    updatePriceDisplay(); updatePriceChart();
+  } catch(e) { console.error('Prices:',e); }
 }
 
-function getCurrentPrice() {
-  return state.priceMap[new Date().getHours()] ?? null;
-}
+function getCurrentPrice() { return state.priceMap[new Date().getHours()]??null; }
 
 function updatePriceDisplay() {
-  const price = getCurrentPrice();
-  if (price == null) return;
-  el('price-value').textContent = '€ ' + fmt(price, 4);
-  const badge = el('price-badge');
-  badge.style.display = 'inline-block';
-  if      (price < 0.10) { badge.textContent = 'Cheap';     badge.className = 'price-badge price-cheap';    }
-  else if (price < 0.30) { badge.textContent = 'Moderate';  badge.className = 'price-badge price-moderate'; }
-  else                   { badge.textContent = 'Expensive'; badge.className = 'price-badge price-expensive';}
-  const prices = state.prices.map(p => p.price);
-  if (prices.length)
-    el('price-summary').textContent =
-      `Min: €${fmt(Math.min(...prices),4)} · Max: €${fmt(Math.max(...prices),4)} · Avg: €${fmt(prices.reduce((a,b)=>a+b,0)/prices.length,4)}`;
+  const p=getCurrentPrice(); if(p==null) return;
+  el('price-value').textContent='€ '+fmt(p,4);
+  const b=el('price-badge'); b.style.display='inline-block';
+  if      (p<0.10){b.textContent='Cheap';    b.className='price-badge price-cheap';}
+  else if (p<0.30){b.textContent='Moderate'; b.className='price-badge price-moderate';}
+  else            {b.textContent='Expensive';b.className='price-badge price-expensive';}
+  const prices=state.prices.map(x=>x.price);
+  if(prices.length)
+    el('price-summary').textContent=`Min: €${fmt(Math.min(...prices),4)} · Max: €${fmt(Math.max(...prices),4)} · Avg: €${fmt(prices.reduce((a,b)=>a+b,0)/prices.length,4)}`;
 }
 
 function updatePriceChart() {
-  if (!state.prices.length) return;
-  const sorted = [...state.prices].sort((a,b) => a.hour - b.hour);
-  const prices = sorted.map(p => p.price);
-  const min = Math.min(...prices), max = Math.max(...prices), range = max - min || 1;
-  const currentHour = new Date().getHours();
-  priceChart.data.labels = sorted.map(p => `${p.hour}:00`);
-  priceChart.data.datasets[0].data = prices;
-  priceChart.data.datasets[0].backgroundColor = sorted.map(p => {
-    if (p.hour === currentHour) return 'rgba(88,166,255,0.9)';
-    const ratio = (p.price - min) / range;
-    return `rgba(${Math.round(63+ratio*181)},${Math.round(185-ratio*120)},80,0.7)`;
+  if(!state.prices.length) return;
+  const sorted=[...state.prices].sort((a,b)=>a.hour-b.hour);
+  const prices=sorted.map(p=>p.price);
+  const min=Math.min(...prices),max=Math.max(...prices),range=max-min||1;
+  const cur=new Date().getHours();
+  priceChart.data.labels=sorted.map(p=>`${p.hour}:00`);
+  priceChart.data.datasets[0].data=prices;
+  priceChart.data.datasets[0].backgroundColor=sorted.map(p=>{
+    if(p.hour===cur) return 'rgba(88,166,255,0.9)';
+    const r=(p.price-min)/range;
+    return `rgba(${Math.round(63+r*181)},${Math.round(185-r*120)},80,0.7)`;
   });
   priceChart.update('none');
 }
 
-// ===============================================================
-//  CHART UPDATES
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
+//  CHART UPDATE
+// ═══════════════════════════════════════════════════════════
 function updateCharts() {
-  const labels = state.powerHistory.map(p => new Date(p.t).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}));
-  powerChart.data.labels = labels;
-  powerChart.data.datasets[0].data = state.powerHistory.map(p => p.v >= 0 ? p.v : 0);
-  powerChart.data.datasets[1].data = state.powerHistory.map(p => p.v <  0 ? Math.abs(p.v) : 0);
+  const cutoff = Date.now()-HISTORY_WINDOW_MS;
+  const ph = state.powerHistory.filter(p=>p.t>cutoff);
+  const lbl = ph.map(p=>new Date(p.t).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}));
+  powerChart.data.labels=lbl;
+  powerChart.data.datasets[0].data=ph.map(p=>p.v>=0?p.v:0);
+  powerChart.data.datasets[1].data=ph.map(p=>p.v<0?Math.abs(p.v):0);
   powerChart.update('none');
 
-  consExpChart.data.datasets[0].data = [...state.hourlyImport];
-  consExpChart.data.datasets[1].data = [...state.hourlyExport];
+  consExpChart.data.datasets[0].data=[...state.hourlyImport];
+  consExpChart.data.datasets[1].data=[...state.hourlyExport];
   consExpChart.update('none');
 
-  gasChart.data.datasets[0].data = [...state.hourlyGas];
+  gasChart.data.datasets[0].data=[...state.hourlyGas];
   gasChart.update('none');
 
-  if (state.solarHistory.length) {
-    solarChart.data.labels = state.solarHistory.map(p => new Date(p.t).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}));
-    solarChart.data.datasets[0].data = state.solarHistory.map(p => p.v);
+  if(state.solarHistory.length){
+    const sh=state.solarHistory.filter(p=>p.t>cutoff);
+    solarChart.data.labels=sh.map(p=>new Date(p.t).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}));
+    solarChart.data.datasets[0].data=sh.map(p=>p.v);
     solarChart.update('none');
   }
 }
 
-// ===============================================================
-//  PERSISTENCE
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
+//  PERSIST — called on every P1 fetch (Issue C fix)
+// ═══════════════════════════════════════════════════════════
 function persistHistory() {
   try {
     localStorage.setItem(HISTORY_KEY, JSON.stringify({
-      day: new Date().getDate(),
+      day:          new Date().getDate(),
       powerHistory: state.powerHistory.slice(-HISTORY_MAX),
       solarHistory: state.solarHistory.slice(-HISTORY_MAX),
       hourlyImport: state.hourlyImport,
@@ -729,16 +627,16 @@ function persistHistory() {
   } catch(e) {}
 }
 
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  SETTINGS MODAL
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 function openSettings() {
-  el('cfg-proxy-url').value      = cfg.proxyUrl        || '';
-  el('cfg-p1ip').value           = cfg.p1Ip            || '';
-  el('cfg-enphase-ip').value     = cfg.enphaseIp       || '';
-  el('cfg-enphase-proto').value  = cfg.enphaseProtocol || 'https';
-  el('cfg-enphase-token').value  = cfg.enphaseToken    || '';
-  el('cfg-refresh').value        = cfg.refresh         || 3;
+  el('cfg-proxy-url').value     = cfg.proxyUrl        ||'';
+  el('cfg-p1ip').value          = cfg.p1Ip            ||'';
+  el('cfg-enphase-ip').value    = cfg.enphaseIp       ||'';
+  el('cfg-enphase-proto').value = cfg.enphaseProtocol ||'https';
+  el('cfg-enphase-token').value = cfg.enphaseToken    ||'';
+  el('cfg-refresh').value       = cfg.refresh         ||3;
   el('modal-overlay').classList.add('open');
 }
 function closeSettings() { el('modal-overlay').classList.remove('open'); }
@@ -748,55 +646,50 @@ function saveSettings() {
   cfg.enphaseIp       = el('cfg-enphase-ip').value.trim();
   cfg.enphaseProtocol = el('cfg-enphase-proto').value;
   cfg.enphaseToken    = el('cfg-enphase-token').value.trim();
-  cfg.refresh         = parseInt(el('cfg-refresh').value) || 3;
-  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  cfg.refresh         = parseInt(el('cfg-refresh').value)||3;
+  localStorage.setItem(CFG_KEY,JSON.stringify(cfg));
   closeSettings();
   clearInterval(mainLoop);
-  mainLoop = setInterval(loop, cfg.refresh * 1000);
+  mainLoop = setInterval(loop, cfg.refresh*1000);
 }
-el('modal-overlay').addEventListener('click', e => { if (e.target === el('modal-overlay')) closeSettings(); });
+el('modal-overlay').addEventListener('click', e => { if(e.target===el('modal-overlay')) closeSettings(); });
 
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  MAIN LOOP
-// ===============================================================
-let lastChartUpdate = 0, lastPersist = 0;
+// ═══════════════════════════════════════════════════════════
+let lastChartUpdate=0;
 
 async function loop() {
   await fetchP1();
   await fetchEnphase();
-  const now = Date.now();
-  if (now - lastChartUpdate > 5000) { lastChartUpdate = now; updateCharts(); }
-  if (now - lastPersist > 30000)    { lastPersist = now; persistHistory(); }
+  const now=Date.now();
+  if(now-lastChartUpdate>5000){ lastChartUpdate=now; updateCharts(); }
   updatePriceDisplay();
 }
 
-let mainLoop = setInterval(loop, cfg.refresh * 1000);
+let mainLoop = setInterval(loop, cfg.refresh*1000);
+fetchPrices();
+setInterval(fetchPrices, 30*60*1000);
+
+// Render charts immediately from restored localStorage data
+renderRestoredCharts();
 loop();
 
-fetchPrices();
-setInterval(fetchPrices, 30 * 60 * 1000);
-
-// ===============================================================
+// ═══════════════════════════════════════════════════════════
 //  WAKE LOCK
-// ===============================================================
-let wakeLock = null;
-async function acquireWakeLock() {
+// ═══════════════════════════════════════════════════════════
+async function acquireWakeLock(){
   try {
-    wakeLock = await navigator.wakeLock.request('screen');
-    wakeLock.addEventListener('release', () => setTimeout(acquireWakeLock, 1000));
-  } catch(e) {}
+    const wl = await navigator.wakeLock.request('screen');
+    wl.addEventListener('release',()=>setTimeout(acquireWakeLock,1000));
+  } catch(e){}
 }
-if ('wakeLock' in navigator) {
+if('wakeLock' in navigator){
   acquireWakeLock();
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') acquireWakeLock();
-  });
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') acquireWakeLock(); });
 }
 
-// ===============================================================
-//  SERVICE WORKER
-// ===============================================================
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
